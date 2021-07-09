@@ -1,0 +1,22 @@
+{
+  "name": "HttpEngineSwift",
+  "version": "0.1.0",
+  "summary": "A short description of HttpEngineSwift.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/13162378587@163.com/HttpEngineSwift",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "13162378587@163.com": "13162378587@163.com"
+  },
+  "source": {
+    "git": "https://github.com/13162378587@163.com/HttpEngineSwift.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "HttpEngineSwift/Classes/**/*"
+}

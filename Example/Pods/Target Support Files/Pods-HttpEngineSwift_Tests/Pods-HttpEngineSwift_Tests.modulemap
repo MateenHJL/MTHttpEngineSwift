@@ -1,0 +1,6 @@
+framework module Pods_HttpEngineSwift_Tests {
+  umbrella header "Pods-HttpEngineSwift_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}
