@@ -35,8 +35,18 @@ TODO: Add long description of the pod here.
   # s.resource_bundles = {
   #   'HttpEngineSwift' => ['HttpEngineSwift/Assets/*.png']
   # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  
+  s.public_header_files = 'Pod/Classes/*.swift'
+  s.dependency 'YYKit'
+  s.dependency 'FMDB'
+  s.dependency 'ISRemoveNull'
+  s.dependency 'DateTools'
+  s.dependency 'ReachabilitySwift'
+  
+  s.pod_target_xcconfig = {
+        'VALID_ARCHS' => 'x86_64 armv7 arm64'
+  }
+  
+  s.static_framework = true
+  s.requires_arc = true
 end

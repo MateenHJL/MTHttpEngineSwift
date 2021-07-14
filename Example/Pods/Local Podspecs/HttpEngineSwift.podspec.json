@@ -18,5 +18,28 @@
   "platforms": {
     "ios": "9.0"
   },
-  "source_files": "HttpEngineSwift/Classes/**/*"
+  "source_files": "HttpEngineSwift/Classes/**/*",
+  "public_header_files": "Pod/Classes/*.swift",
+  "dependencies": {
+    "YYKit": [
+
+    ],
+    "FMDB": [
+
+    ],
+    "ISRemoveNull": [
+
+    ],
+    "DateTools": [
+
+    ],
+    "ReachabilitySwift": [
+
+    ]
+  },
+  "pod_target_xcconfig": {
+    "VALID_ARCHS": "x86_64 armv7 arm64"
+  },
+  "static_framework": true,
+  "requires_arc": true
 }
