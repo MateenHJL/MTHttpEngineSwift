@@ -7,20 +7,31 @@
 
 import Foundation
 
-class BaseHttpItem : HttpSessionDataTaskDataSource {
-    var httpRequestPostParams: Dictionary<String, String>{
+public typealias httpSuccessfulBlock<T> = ((T) -> Void)?;
+public typealias httpFailedBlock = ((CommonLogicDataModel) -> Void)?;
+
+open class BaseHttpItem : NSObject, HttpSessionDataTaskDataSource {
+    public override init() {
+        
+    }
+    
+    deinit {
+        print("\(self.className()) has been dealloc");
+    }
+    
+    public var httpRequestPostParams: Dictionary<String, String>{
         get{
             return [:]
         }
     }
     
-    var httpReqeustDomainUrl : String{
+    public var httpReqeustDomainUrl : String{
         get {
             return BaseHttpConfigManager.shareHttpConfigManager().config!.configBaseHttpUrlWithHttpItem(item: self);
         }
     }
     
-    var httpRequestAbsoluteUrlString : String{
+    public var httpRequestAbsoluteUrlString : String{
         get{
             if (self.httpReqeustDomainUrl.count == 0 && self.httpRequestUrl.count == 0)
             {
@@ -33,13 +44,13 @@ class BaseHttpItem : HttpSessionDataTaskDataSource {
         }
     }
     
-    var httpRequestUrl : String = "";
+    public var httpRequestUrl : String = "";
     
-    var httpRequestResponseData : Any? = nil;
+    public var httpRequestResponseData : Any? = nil;
     
-    var httpRequestErrorMessage : String = "";
+    public var httpRequestErrorMessage : String = "";
     
-    var httpRequestDebugErrorMessage : String = "";
+    public var httpRequestDebugErrorMessage : String = "";
     
     var httpRequestCalledClassName : String{
         get{
@@ -77,16 +88,16 @@ class BaseHttpItem : HttpSessionDataTaskDataSource {
         }
     }
     
-    var httpRequestStatusCode : Int = HTTPStatusCode.DetaultCode.rawValue;
+    public var httpRequestStatusCode : Int = HTTPStatusCode.DetaultCode.rawValue;
    
     var httpRequestStatus : HTTPRequestStatus = HTTPRequestStatus.Prepared;
     
-    var httpRequestResponseDataJson : String = "";
+    public var httpRequestResponseDataJson : String = "";
     
     var httpRequestType : HTTPRequestType = HTTPRequestType.RequestJsonDataType;
     
     var _httpRequestMethod : HTTPMethod = HTTPMethod.GET;
-    var httpRequestMethod : HTTPMethod{
+    public var httpRequestMethod : HTTPMethod{
         set{
             var method = "";
             _httpRequestMethod = newValue;
@@ -109,13 +120,13 @@ class BaseHttpItem : HttpSessionDataTaskDataSource {
         }
     }
     
-    var httpResponseDataType : HTTPResponseDataType = HTTPResponseDataType.UnknownType;
+    public var httpResponseDataType : HTTPResponseDataType = HTTPResponseDataType.UnknownType;
     
-    var httpRequestMethodString : String = "";
+    public var httpRequestMethodString : String = "";
     
     var httpRequestTimeoutCount : Int{
         get{
-            return BaseHttpConfigManager.shareHttpConfigManager().config!.httpRequestTimeoutCount();
+            return BaseHttpConfigManager.shareHttpConfigManager().config?.httpRequestTimeoutCount() ?? 15;
         }
     }
 
@@ -123,6 +134,7 @@ class BaseHttpItem : HttpSessionDataTaskDataSource {
         get{
             var _httpRequestConnectStatus : HTTPConnectionCompletedStatus? = nil;
             var isSuccessed : Bool = false;
+
             if ((BaseHttpConfigManager.shareHttpConfigManager().config?.isSuccessedRequestionWithItem(item: self)) == true)
             {
                 isSuccessed = BaseHttpConfigManager.shareHttpConfigManager().config!.isSuccessedRequestionWithItem(item: self);
@@ -173,41 +185,6 @@ class BaseHttpItem : HttpSessionDataTaskDataSource {
         }
     }
     
-    var httpItemCallBackSelector : Selector{
-        get{
-            var methodName = "";
-            if (self.httpRequestStatus == HTTPRequestStatus.Connecting)
-            {
-                switch self.httpRepeatActionType
-                {
-                    case HTTPRepeatActionType.Uploading:
-                        methodName = "httpRequestUploadProgressValueWithItem:";
-                    case HTTPRepeatActionType.Downloading:
-                        methodName = "httpRequestDownloadProgressValueWithItem:";
-                    default:
-                        break;
-                }
-            }
-            else if (self.httpRequestStatus == HTTPRequestStatus.HasFinished)
-            {
-                switch self.httpRequestConnectedStatus
-                {
-                    case HTTPConnectionCompletedStatus.ConnectedException:
-                        methodName = "httpRequestCompletedExceptionWithItem:"
-                    case HTTPConnectionCompletedStatus.ConnectedSuccessed:
-                        methodName = "httpRequestCompletedWithItem:";
-                    case HTTPConnectionCompletedStatus.ConnectedFailed:
-                        methodName = "httpRequestFailedWitItem:";
-                    default:
-                        break;
-                }
-            }
-            
-            let selector : Selector = Selector.init(methodName);
-            return selector;
-        }
-    }
-    
     var httpRepeatActionType : HTTPRepeatActionType = HTTPRepeatActionType.None;
     
     var httpRequestPostParasString : String{
@@ -224,7 +201,7 @@ class BaseHttpItem : HttpSessionDataTaskDataSource {
         }
     }
     
-    var httpRequestHeaderParams: Dictionary<String, String>{
+    public var httpRequestHeaderParams: Dictionary<String, String>{
         get{
             return BaseHttpConfigManager.shareHttpConfigManager().config!.headerRequestDictionary();
         }
@@ -244,7 +221,11 @@ class BaseHttpItem : HttpSessionDataTaskDataSource {
     
     var httpResponseIsMockStatus: Bool = false;
     
-    var httpReuqestShouldAddSelfToLog: Bool = false;
+    open var httpReuqestShouldAddSelfToLog: Bool{
+        get {
+            return BaseHttpConfigManager.shareHttpConfigManager().config.httpRequestShouldSaveToLocalDB(item: self);
+        }
+    }
     
     func httpRequestDownloadProgressValueWithItem(item: BaseHttpItem) {
         return;
@@ -254,28 +235,57 @@ class BaseHttpItem : HttpSessionDataTaskDataSource {
         return "";
     }
     
-    func httpRequestCompletedExceptionWithItem(item: BaseHttpItem) -> Void {
-        return;
+    open func httpRequestCompletedExceptionWithItem(item: BaseHttpItem) -> Void {
+        
     }
     
-    func httpRequestCompletedWithItem(item : BaseHttpItem) -> Void {
-        return;
+    open func httpRequestCompletedWithItem(item : BaseHttpItem) -> Void {
+        
     }
     
-    func httpRequestFailedWitItem(item : BaseHttpItem) -> Void {
-        return;
+    open func httpRequestFailedWitItem(item : BaseHttpItem) -> Void {
+        
     }
     
     func cancelHttpRequest() -> Void {
-        //TODO
+        HttpEngine.shareHttpEngine().cancelHttpRequestWithItem(item: self);
     }
     
-    func descriptionItem() -> String {
+    open func descriptionItem() -> String {
         return "";
     }
     
     func displayItemInformation() -> String {
-        return "";
+        return BaseHttpConfigManager.shareHttpConfigManager().config!.displayItemInformationWithItem(item: self);
     }
-     
+    
+    func execSelector() -> Void{
+        if (self.httpRequestStatus == HTTPRequestStatus.Connecting)
+        {
+            switch self.httpRepeatActionType
+            {
+            //TODO
+            case HTTPRepeatActionType.Uploading: break
+//                    methodName = "httpRequestUploadProgressValueWithItem:";
+            case HTTPRepeatActionType.Downloading: break
+//                    methodName = "httpRequestDownloadProgressValueWithItem:";
+                default:
+                    break;
+            }
+        }
+        else if (self.httpRequestStatus == HTTPRequestStatus.HasFinished)
+        {
+            switch self.httpRequestConnectedStatus
+            {
+                case HTTPConnectionCompletedStatus.ConnectedException:
+                    httpRequestCompletedExceptionWithItem(item: self);
+                case HTTPConnectionCompletedStatus.ConnectedSuccessed:
+                    httpRequestCompletedWithItem(item: self);
+                case HTTPConnectionCompletedStatus.ConnectedFailed:
+                    httpRequestFailedWitItem(item: self);
+                default:
+                    break;
+            }
+        }
+    }
 }

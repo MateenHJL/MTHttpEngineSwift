@@ -1,9 +1,9 @@
 {
   "name": "HttpEngineSwift",
-  "version": "0.1.0",
+  "version": "1.0.2",
   "summary": "A short description of HttpEngineSwift.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/13162378587@163.com/HttpEngineSwift",
+  "homepage": "https://github.com/MateenHJL/MTHttpEngineSwift.git",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -12,13 +12,13 @@
     "13162378587@163.com": "13162378587@163.com"
   },
   "source": {
-    "git": "https://github.com/13162378587@163.com/HttpEngineSwift.git",
-    "tag": "0.1.0"
+    "git": "https://github.com/MateenHJL/MTHttpEngineSwift.git",
+    "tag": "1.0.2"
   },
   "platforms": {
     "ios": "9.0"
   },
-  "source_files": "HttpEngineSwift/Classes/**/*",
+  "source_files": "HttpEngineSwift/Classes/**/*.{swift}",
   "public_header_files": "Pod/Classes/*.swift",
   "dependencies": {
     "YYKit": [
@@ -30,7 +30,7 @@
     "ISRemoveNull": [
 
     ],
-    "DateTools": [
+    "DateToolsSwift": [
 
     ],
     "ReachabilitySwift": [

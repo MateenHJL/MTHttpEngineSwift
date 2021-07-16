@@ -5,20 +5,20 @@
 //  Created by Sumansoul on 2021/7/9.
 //
  
-enum HTTPMethod {
+public enum HTTPMethod {
     case POST //the way you accessed to server is POST.
     case GET //the way you accessed to server is GET
     case PUT //the way you accessed to server is PUT
     case DELETE //the way you accessed to server is Delete
 }
 
-enum HTTPCacheType {
+public enum HTTPCacheType {
     case ServerOnly           //just returned the response data after request from Server.the data didn't save.and not read the data which in sandbox as the same time.
     case CacheOnly             //just returned the local data which in sandbox,it didn't request from Server.it will request the server to get real response data if the data isn't existing.the data which is gotten from server will be save at sandbox.
     case DataThenServerData //the first,you will get local data which is in sandbox,and then you will get the real response data which is gotten from Server.the data which is gotten from server will be save at sandbox.
 }
 
-enum HTTPStatusCode:Int {
+public enum HTTPStatusCode:Int {
     case DetaultCode = 0  //the connection didn't begun yet.
     case NoneError          = 200
     case RequestUrlIsNilOrNotCorrect//the url of httpItem is nil or empty string url.
@@ -31,26 +31,26 @@ enum HTTPStatusCode:Int {
     case NoConfigFile                = 700006//there's no httpConfig file yet,user should call - (void)setupHttpEngineWithConfig first
 }
 
-enum HTTPRequestStatus {
+public enum HTTPRequestStatus {
     case Prepared  //the request of httpItem is wating for request.
     case Connecting    //the request of httpItem is connecting.
     case HasFinished//the request of httpItem has already been finished.
 }
 
-enum HTTPRequestType {
+public enum HTTPRequestType {
     case RequestJsonDataType//normal http request,send data to server,then get the jsonString from server.
     case DownloadFilesType  //download some files or pictures.
     case FilesType     //upload some files or pictures.
 }
 
-enum HTTPResponseDataType {
+public enum HTTPResponseDataType {
     case UnknownType         //the response didn't loaded yet,default it is.
     case LoadedFromServer    //the response which loaded from Server
     case LoadedFromLocalCache //the response which loaded from local files or memories.
     case LoadedFromMockingResponse//the response loaded from local data which mocked by developer
 }
 
-enum HTTPConnectionCompletedStatus {
+public enum HTTPConnectionCompletedStatus {
     case UnknowStatus                              //didn't request server at all.
     case ConnectedSuccessed                      //your connection is completed and the response you got from server is correct.
     case ConnectedException                        //your connection is completed ,but the response you got from server is not correct.
@@ -63,7 +63,7 @@ enum HTTPRepeatActionType {
     case Downloading       //you are receiving the data while you downloaded.
 }
 
-enum HTTPRequestResultType {
+public enum HTTPRequestResultType {
     case Successed        //http request successed.
     case Failed           //http request failed,maybe your code or result is not match
     case AnotherType      //http request will be determinal

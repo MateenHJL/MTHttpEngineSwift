@@ -8,14 +8,14 @@
 import Foundation
 import ISRemoveNull
 
-class HttpEngine : NSObject {
+open class HttpEngine : NSObject {
     
     lazy var operationQueue : OperationQueue = OperationQueue.init();
     
     static let engine = HttpEngine();
     
     //init with SingleTon
-    static func shareHttpEngine () -> HttpEngine{
+    public static func shareHttpEngine () -> HttpEngine{
         return engine;
     }
     
@@ -25,20 +25,21 @@ class HttpEngine : NSObject {
         print("HttpEngine init");
     }
     
-    override func copy() -> Any {
+    open override func copy() -> Any {
         return self;
     }
     
-    override func mutableCopy() -> Any {
+    open override func mutableCopy() -> Any {
         return self;
     }
     
     //execute http request with asynchronous
-    func startConnectionWithRequestItem(item: BaseHttpItem) -> Void {
-        guard BaseHttpConfigManager.shareHttpConfigManager().config == nil else {
+    open func startConnectionWithRequestItem(item: BaseHttpItem) -> Void {
+        if (BaseHttpConfigManager.shareHttpConfigManager().config == nil)
+        {
             print("there's no httpConfig in BaseHttpConfigManager,please called [[BaseHttpConfigManager shareHttpConfigManager] setupHttpEngineWithConfig:] when your application launched first");
             return;
-        }
+        } 
         
         var queue : Operation? = nil;
         
@@ -99,12 +100,12 @@ class HttpEngine : NSObject {
                 let jsonData : Data = item.mocksJsonData().data(using: String.Encoding.utf8)!;
                 item.httpRequestResponseData = try! JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers);
                 item.httpResponseDataType = HTTPResponseDataType.LoadedFromMockingResponse;
-                performSelector(onMainThread: item.httpItemCallBackSelector, with: item, waitUntilDone: Thread.isMainThread);
+                item.execSelector();
                 print(item.displayItemInformation());
                 return;
             }
             
-            queue = HttpRequestOperation.init(item: item) { [unowned self] (responsedItem : BaseHttpItem) in
+            queue = HttpRequestOperation.init(item: item) { (responsedItem : BaseHttpItem) in
                 responsedItem.httpRequestStatus = HTTPRequestStatus.HasFinished;
                 responsedItem.httpResponseDataType = HTTPResponseDataType.LoadedFromServer;
                 
@@ -121,11 +122,22 @@ class HttpEngine : NSObject {
                 
                 if (CacheLogicHandleManager.shouldSaveHttpNetworkLogWithItem(item: responsedItem))
                 {
-                    //TODO
+                    let sqliteItem : BaseSqliteItem<BaseDataModel.Type> = HttpLogCollectionItem.convertHttpItemWithSqliteItemWithHttpItem(item: responsedItem);
+                    SqliteEngine.shareEngine().excutedWithSqiteItem(item: sqliteItem) { (isSuccessed : Bool, operatedError : String) in
+                        if (isSuccessed)
+                        {
+                            print("HttpLog信息保存成功");
+                        }
+                        else
+                        {
+                            print("HttpLog信息保存失败,失败信息：\(operatedError)");
+                        }
+                    }
                 }
                 
+                
+                responsedItem.execSelector();
                 print(responsedItem.displayItemInformation());
-                performSelector(onMainThread: responsedItem.httpItemCallBackSelector, with: responsedItem, waitUntilDone: Thread.isMainThread);
             }
         }
         else if (item.httpRequestType == HTTPRequestType.FilesType)

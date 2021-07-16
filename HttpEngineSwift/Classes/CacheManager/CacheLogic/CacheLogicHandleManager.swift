@@ -62,7 +62,7 @@ class CacheLogicHandleManager {
     //should show in log
     static func shouldSaveHttpNetworkLogWithItem(item : BaseHttpItem) -> Bool{
         var result = false;
-        if (item.httpRequestConnectedStatus != HTTPConnectionCompletedStatus.ConnectedSuccessed)
+        if (item.httpReuqestShouldAddSelfToLog)
         {
             result = true;
         }

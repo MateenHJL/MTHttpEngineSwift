@@ -28,16 +28,6 @@ extension String
         return nsSt.strings(byAppendingPaths: [path]).first!;
     }
 }
- 
-extension NSObject
-{
-    func classFromString(className : String) -> AnyClass {
-        let appName : String = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String;
-             // YourProject.className
-        let classStringName = appName + "." + className
-        return NSClassFromString(classStringName)!
-    }
-}
 
 extension Optional {
     func isNil(_ object: Wrapped) -> Bool {
@@ -50,10 +40,19 @@ extension Optional {
     }
 }
 
-extension Dictionary{
+public extension Dictionary{
     func MTdictionaryByRemovingNull() -> Dictionary {
         let tmp : NSDictionary = self as NSDictionary;
         return tmp.dictionaryByRemovingNull() as! Dictionary<Key, Value>;
+    }
+    
+    func descriptionWithLocale() -> String {
+        var strM : String = "{\n";
+        for (key , value) in self.enumerated() {
+            strM.append("\t\(key) = \(value);\n");
+        }
+        strM.append("}\n")
+        return strM;
     }
 }
 

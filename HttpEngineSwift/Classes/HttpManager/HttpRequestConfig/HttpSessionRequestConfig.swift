@@ -15,13 +15,14 @@ protocol HttpSessionDataTaskDataSource : class{
     var httpRequestCacheMark : String {get};
     var httpRequestAcceptableContentTypes : Array<String>{ get set};
     var httpResponseIsMockStatus : Bool{ get set};
-    var httpReuqestShouldAddSelfToLog : Bool{ get set};
+    var httpReuqestShouldAddSelfToLog : Bool{ get };
 
     func httpRequestDownloadProgressValueWithItem(item : BaseHttpItem) -> Void;
     func mocksJsonData() -> String;
 }
 
-protocol HttpConfigDataSource : class {
+public protocol HttpConfigDataSource : class {
+    func httpRequestShouldSaveToLocalDB (item : BaseHttpItem) -> Bool;
     func configBaseHttpUrlWithHttpItem(item : BaseHttpItem) -> String;
     func headerRequestDictionary() -> Dictionary<String, String>;
     func httpRequestTimeoutCount() -> Int;

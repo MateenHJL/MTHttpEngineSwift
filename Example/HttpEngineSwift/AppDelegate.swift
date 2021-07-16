@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import HttpEngineSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        BaseHttpConfigManager.shareHttpConfigManager().setupHttpEngineWithConfig(config: TestHttpConfig.init());
+        
+        let item : CheckVersionHttpItem = CheckVersionHttpItem().initWith { (data : CheckVersionEntity) in
+            print("\(data.data!.content!) + \(data.data!.version!)");
+        } faliedBlock: { (data : CommonLogicDataModel) in
+            print("aaaa");
+        }
+        HttpEngine.shareHttpEngine().startConnectionWithRequestItem(item: item);
+        
         return true
     }
 

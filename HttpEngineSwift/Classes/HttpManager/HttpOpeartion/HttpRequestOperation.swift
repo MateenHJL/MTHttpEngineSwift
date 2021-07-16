@@ -15,9 +15,9 @@ class HttpRequestOperation : Operation {
     
     private(set) var operationIndentity : String?;
     
-    var statusCodesArray : Array<AnyClass>{
+    var statusCodesArray : Array<BaseHttpStatusCode>{
         get{
-            let classNameArray : Array<AnyClass> = [classFromString(className: "BaseHttpStatusCode"),classFromString(className: "Http200StatusCode"),classFromString(className: "Http400StatusCode"),classFromString(className: "Http401StatusCode"),classFromString(className: "Http404StatusCode"),classFromString(className: "Http422StatusCode"),classFromString(className: "Http500StatusCode"),classFromString(className: "HttpNoNetworkStatusCode"),classFromString(className: "HttpRequestConnectedFailedStatusCode"),classFromString(className: "HttpRequestNoneConfigFileStatusCode"),classFromString(className: "HttpRequestUrlIsNilStatusCode"),classFromString(className: "HttpResponseCanNotBeParsedStatusCode"),classFromString(className: "HttpResponseIsNilStatusCode")];
+            let classNameArray : Array<BaseHttpStatusCode> = [BaseHttpStatusCode.init(),Http200StatusCode.init(),Http400StatusCode.init(),Http401StatusCode.init(),Http404StatusCode.init(),Http422StatusCode.init(),Http500StatusCode.init(),HttpNoNetworkStatusCode.init(),HttpRequestConnectedFailedStatusCode.init(),HttpRequestNoneConfigFileStatusCode.init(),HttpRequestUrlIsNilStatusCode.init(),HttpResponseCanNotBeParsedStatusCode.init(),HttpResponseIsNilStatusCode.init()] 
             return classNameArray;
         }
     }
@@ -26,7 +26,7 @@ class HttpRequestOperation : Operation {
      
     var requestLockerManager : NSConditionLock? = nil;
     
-    lazy var httpUrlRequest : URLRequest = URLRequest.init(url: URL.init(string: "")!);
+    var httpUrlRequest : URLRequest? = nil;
     
     init(item : BaseHttpItem , block : @escaping (BaseHttpItem) -> Void) {
         self.item = item;
@@ -35,16 +35,7 @@ class HttpRequestOperation : Operation {
         
         self.httpRequestOperationFinishedBlock = block; 
     }
-    
-    func initWith(item : BaseHttpItem , block : @escaping (BaseHttpItem) -> Void) -> HttpRequestOperation {
-        self.item = item;
-        self.operationIndentity = "itemIndentity_\(object_getClassName(self.item))"
-        self.requestLockerManager = NSConditionLock.init(condition: kLockedKey);
-        self.httpRequestOperationFinishedBlock = block;
-        block (self.item!);
-        return self;
-    }
-    
+     
     //start http request
     override func main() {
         startHttpRequest();
@@ -53,17 +44,17 @@ class HttpRequestOperation : Operation {
     //http request start lunch
     func startHttpRequest() -> Void {
         self.item!.httpRequestStatus = HTTPRequestStatus.Connecting;
-        self.httpUrlRequest.timeoutInterval = TimeInterval(self.item!.httpRequestTimeoutCount);
-        self.httpUrlRequest.url = httpRequestAppendsUrl();
+        self.httpUrlRequest = URLRequest.init(url: httpRequestAppendsUrl());
+        self.httpUrlRequest!.timeoutInterval = TimeInterval(self.item!.httpRequestTimeoutCount);
         switch item!.httpRequestMethod
         {
             case HTTPMethod.POST:
-                self.httpUrlRequest.httpBody = httpPostBodyAppendsData();
+                self.httpUrlRequest!.httpBody = httpPostBodyAppendsData();
             default:
                 break
         }
         
-        self.httpUrlRequest.httpMethod = self.item?.httpRequestMethodString;
+        self.httpUrlRequest!.httpMethod = self.item!.httpRequestMethodString;
          
         addHttpRequestHeaderValue();
         
@@ -71,35 +62,38 @@ class HttpRequestOperation : Operation {
             UIApplication.shared.isNetworkActivityIndicatorVisible = true;
         }
          
-        let dataTask : URLSessionDataTask = URLSession.shared.dataTask(with: self.httpUrlRequest) {[unowned self](data : Data?, response : URLResponse?, error : Error?) in
+        let dataTask : URLSessionDataTask = URLSession.shared.dataTask(with: self.httpUrlRequest!) {(data : Data?, response : URLResponse?, error : Error?) in
             DispatchQueue.main.async {
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false;
             }
             
             DispatchQueue.main.async {
-                self.requestLockerManager?.unlock(withCondition: self.kLockedKey);
+                self.requestLockerManager!.unlock(withCondition: self.kLockedKey);
             }
             
             if (response != nil)
             {
-                let httpResponse : HTTPURLResponse = response as! HTTPURLResponse;
-                updateErrorMessageWithStatusCode(statusCode: httpResponse.statusCode);
-                self.item?.httpRequestResponseData = nil;
+                if (response is HTTPURLResponse)
+                {
+                    let httpResponse : HTTPURLResponse = response as! HTTPURLResponse;
+                    self.updateErrorMessageWithStatusCode(statusCode: httpResponse.statusCode);
+                }
+                self.item!.httpRequestResponseData = nil;
                 
                 if (data == nil && (error != nil))
                 {
-                    operationFinishedThenSendingBlockToSuper();
+                    self.operationFinishedThenSendingBlockToSuper();
                 }
                 else
                 {
                     if (data != nil)
                     {
                         //parse data to dictionary
-                        self.item?.httpRequestResponseDataJson = String.init(data: data!, encoding: String.Encoding.utf8)!;
+                        self.item!.httpRequestResponseDataJson = String.init(data: data!, encoding: String.Encoding.utf8)!;
                         let requestResponse : Any? = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers);
                         if (requestResponse == nil)
                         {
-                            operationFinishedThenSendingBlockToSuper();
+                            self.operationFinishedThenSendingBlockToSuper();
                             return;
                         }
                         
@@ -110,29 +104,29 @@ class HttpRequestOperation : Operation {
                             self.item!.httpRequestResponseData = try! JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers);
                             if (self.item!.httpRequestResponseData == nil)
                             {
-                                updateErrorMessageWithStatusCode(statusCode: HTTPStatusCode.ParseError.rawValue);
-                                operationFinishedThenSendingBlockToSuper();
+                                self.updateErrorMessageWithStatusCode(statusCode: HTTPStatusCode.ParseError.rawValue);
+                                self.operationFinishedThenSendingBlockToSuper();
                                 return;
                             }
                         }
                         else if (requestResponse is Dictionary<String, Any> || requestResponse is Array<Any>)
                         {
-                            self.item?.httpRequestResponseData = requestResponse;
+                            self.item!.httpRequestResponseData = requestResponse;
                         }
                         
-                        operationFinishedThenSendingBlockToSuper();
+                        self.operationFinishedThenSendingBlockToSuper();
                     }
                     else
                     {
-                        updateErrorMessageWithStatusCode(statusCode: HTTPStatusCode.ResponseDataIsNil.rawValue);
-                        operationFinishedThenSendingBlockToSuper();
+                        self.updateErrorMessageWithStatusCode(statusCode: HTTPStatusCode.ResponseDataIsNil.rawValue);
+                        self.operationFinishedThenSendingBlockToSuper();
                     }
                 }
             }
             else
             {
-                updateErrorMessageWithStatusCode(statusCode: HTTPStatusCode.NoNetwork.rawValue);
-                operationFinishedThenSendingBlockToSuper();
+                self.updateErrorMessageWithStatusCode(statusCode: HTTPStatusCode.NoNetwork.rawValue);
+                self.operationFinishedThenSendingBlockToSuper();
             }
         };
         
@@ -163,9 +157,9 @@ class HttpRequestOperation : Operation {
         let header : Dictionary<String, Any> = requestHeaderParams();
         for key in header.keys {
             let headerValue : String = header[key] as! String;
-            self.httpUrlRequest.addValue(headerValue, forHTTPHeaderField: key);
+            self.httpUrlRequest!.addValue(headerValue, forHTTPHeaderField: key);
         }
-        self.httpUrlRequest.addValue(acceptTypeAppendsString(), forHTTPHeaderField: "Accept");
+        self.httpUrlRequest!.addValue(acceptTypeAppendsString(), forHTTPHeaderField: "Accept");
     }
     
     
@@ -194,10 +188,9 @@ class HttpRequestOperation : Operation {
     }
      
     func updateErrorMessageWithStatusCode(statusCode : Int) -> Void {
-        for _ in 0...self.statusCodesArray.count
+        for tmpClass: BaseHttpStatusCode in self.statusCodesArray
         {
-            let statusCodeBaseClass : BaseHttpStatusCode = BaseHttpStatusCode.init();
-            statusCodeBaseClass.matchingWithStatusCode(statusCode: statusCode, item: self.item!);
+            tmpClass.matchingWithStatusCode(statusCode: statusCode, item: self.item!);
         }
     }
     

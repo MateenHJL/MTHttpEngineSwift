@@ -8,13 +8,13 @@
 import Foundation
 import Reachability
 
-class BaseHttpConfigManager : NSObject {
+public class BaseHttpConfigManager : NSObject {
     
     static let manager = BaseHttpConfigManager();
         
-    weak open private(set) var config : HttpConfigDataSource?;
+    public var config : HttpConfigDataSource! = nil;
     
-    static func shareHttpConfigManager () -> BaseHttpConfigManager{
+    public static func shareHttpConfigManager () -> BaseHttpConfigManager{
         return manager;
     }
     
@@ -22,16 +22,23 @@ class BaseHttpConfigManager : NSObject {
         print("BaseHttpConfigManager init");
     }
     
-    override func copy() -> Any {
+    public override func copy() -> Any {
         return self;
     }
     
-    override func mutableCopy() -> Any {
+    public override func mutableCopy() -> Any {
         return self;
     }
     
-    func setupHttpEngineWithConfig(config : HttpConfigDataSource) -> Void{
+    public func setupHttpEngineWithConfig(config : HttpConfigDataSource) -> Void{
         self.config = config;
         try! Reachability().startNotifier();
+        
+        SqliteEngine.shareEngine().configTableInformationWithSqliteItem(item: HttpLogCollectionItem.createTableItem()()) { (isSuccessed : Bool, operatedError : String) in
+            if (isSuccessed)
+            {
+                print("Http log收集器开启");
+            }
+        }
     }
 }

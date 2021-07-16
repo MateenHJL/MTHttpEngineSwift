@@ -30,7 +30,7 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '9.0'
 
-  s.source_files = 'HttpEngineSwift/Classes/**/*'
+  s.source_files = 'HttpEngineSwift/Classes/**/*.{swift}'
   
   # s.resource_bundles = {
   #   'HttpEngineSwift' => ['HttpEngineSwift/Assets/*.png']
@@ -40,7 +40,7 @@ TODO: Add long description of the pod here.
   s.dependency 'YYKit'
   s.dependency 'FMDB'
   s.dependency 'ISRemoveNull'
-  s.dependency 'DateTools'
+  s.dependency 'DateToolsSwift'
   s.dependency 'ReachabilitySwift'
   
   s.pod_target_xcconfig = {

@@ -1,10 +1,15 @@
 PODS:
-  - DateTools (2.0.0)
+  - DateToolsSwift (5.0.0)
+  - FBSnapshotTestCase (2.1.4):
+    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
+  - FBSnapshotTestCase/Core (2.1.4)
+  - FBSnapshotTestCase/SwiftSupport (2.1.4):
+    - FBSnapshotTestCase/Core
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - HttpEngineSwift (0.1.0):
-    - DateTools
+  - HttpEngineSwift (1.0.2):
+    - DateToolsSwift
     - FMDB
     - ISRemoveNull
     - ReachabilitySwift
@@ -16,11 +21,13 @@ PODS:
   - YYKit/no-arc (1.0.9)
 
 DEPENDENCIES:
+  - FBSnapshotTestCase (~> 2.1.4)
   - HttpEngineSwift (from `../`)
 
 SPEC REPOS:
   trunk:
-    - DateTools
+    - DateToolsSwift
+    - FBSnapshotTestCase
     - FMDB
     - ISRemoveNull
     - ReachabilitySwift
@@ -31,13 +38,14 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DateTools: 933ac9c490f21f92127cf690ccd8c397e0126caf
+  DateToolsSwift: 4207ada6ad615d8dc076323d27037c94916dbfa6
+  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  HttpEngineSwift: 45394151eb26e7d8828f5e4e50f742e5bc5f27e8
+  HttpEngineSwift: 2179dd61e954742bacb008fec570c3b13f0acbe9
   ISRemoveNull: 7fb2bb73a9f173cd1d12e9cbd7c7d8766d939b4d
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: eb0f3f3c8848934092eacfb18476c8a68c2fd6b1
+PODFILE CHECKSUM: e2e4dce311bc2d85d23e158efae7bab8e85c5e27
 
 COCOAPODS: 1.10.1
