@@ -41,7 +41,7 @@ class SqliteEngine{
         self.sqliteQueue = FMDatabaseQueue.init(path: databasePath);
         if (!isExist)
         {
-            try! manager.createDirectory(atPath: databasePath, withIntermediateDirectories: true, attributes: nil);
+            try? manager.createDirectory(atPath: databasePath, withIntermediateDirectories: true, attributes: nil);
         }
     }
     

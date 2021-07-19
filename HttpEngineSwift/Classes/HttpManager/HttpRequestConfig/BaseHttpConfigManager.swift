@@ -34,11 +34,11 @@ public class BaseHttpConfigManager : NSObject {
         self.config = config;
         try! Reachability().startNotifier();
         
-        SqliteEngine.shareEngine().configTableInformationWithSqliteItem(item: HttpLogCollectionItem.createTableItem()()) { (isSuccessed : Bool, operatedError : String) in
+        SqliteEngine.shareEngine().configTableInformationWithSqliteItem(item: HttpLogCollectionItem.createTableItem()) { (isSuccessed : Bool, operatedError : String) in
             if (isSuccessed)
             {
                 print("Http log收集器开启");
             }
-        }
+        } 
     }
 }

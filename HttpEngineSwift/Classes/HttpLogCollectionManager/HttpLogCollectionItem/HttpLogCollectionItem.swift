@@ -33,8 +33,8 @@ class HttpLogCollectionItem {
     static let kHttpRequestUrl = "httpRequestUrl";
 
     
-    static func createTableItem () -> BaseSqliteItem<BaseDataModel.Type>{
-        let item : BaseSqliteItem = BaseSqliteItem<BaseDataModel.Type>.init();
+    static func createTableItem () -> BaseSqliteItem<AnyClass>{
+        let item : BaseSqliteItem = BaseSqliteItem<AnyClass>.init();
         item.configTableStatement = "CREATE TABLE IF NOT EXISTS '\(kHttpCollectedLogCenterTable)' ('\(kId)' INTEGER PRIMARY KEY AUTOINCREMENT,'\(kDisplayDescription)' TEXT,'\(kLogType)' INTEGER, '\(kCreateTimeStamp)' INTEGER, '\(kCreateTime)' TEXT, '\(kMark)' TEXT, '\(kBusinessDescription)' TEXT, '\(kHttpMethod)' TEXT, '\(kPostParams)' TEXT, '\(kHeader)' TEXT, '\(kResponseData)' TEXT, '\(kStatusCode)' TEXT, '\(kResponseDataType)' TEXT, '\(kHttpDebugMessage)' TEXT, '\(kCreateDay)' TEXT, '\(kHttpRequestUrl)' TEXT)";
         return item;
     }
