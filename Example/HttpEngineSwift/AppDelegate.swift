@@ -27,6 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         HttpEngine.shareHttpEngine().startConnectionWithRequestItem(item: item);
         
+//        let sqliteItem : BaseSqliteItem = HttpLogCollectionItem.selectAllHttpLogWithMark(mark: "mark_1_mark");
+//        sqliteItem.dataType = HttpLogInfomationDataModeType.httpRequest;
+//        SqliteEngine.shareEngine().selectDataWithStatement(item: sqliteItem) { (isSuccessed : Bool, data: Array<BaseDataModel>) in
+//        
+//            print("result = \(data)")
+//        }
         return true
     }
 

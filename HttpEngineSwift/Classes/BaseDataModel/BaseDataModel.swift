@@ -6,22 +6,14 @@
 //
 
 import Foundation
-import YYKit
+import HandyJSON
 
-open class BaseDataModel : NSObject, YYModel , NSCoding{
-    public func encode(with coder: NSCoder) {
-        self.modelEncode(with: coder);
-    }
+open class BaseDataModel : HandyJSON{
     
-    public required convenience init?(coder: NSCoder) {
-        self.init();
-        self.modelInit(with: coder);
+    required public init() {
+        
     }
 
-    public override var description: String{
-        return modelDescription();
-    }
-    
     func displayAllAttributed() -> Void {
         print("displayAllAttributed called");
     }

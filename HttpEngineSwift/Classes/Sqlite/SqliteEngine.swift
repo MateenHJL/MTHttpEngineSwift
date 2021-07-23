@@ -7,11 +7,12 @@
 
 import Foundation
 import FMDB
+import HandyJSON
 
 public typealias sqliteEngineExecuteCompletedBlock = ((Bool, String) -> Void)?;
 public typealias sqliteEngineSelectedCompletedBlock<T> = ((Bool, Array<T>) -> Void)?;
 
-class SqliteEngine{
+open class SqliteEngine{
     
     var database : FMDatabase? = nil;
     var sqliteQueue : FMDatabaseQueue? = nil;
@@ -21,7 +22,7 @@ class SqliteEngine{
     static let engine : SqliteEngine = SqliteEngine.init();
     
     //init SqliteEngine;
-    static func shareEngine () -> SqliteEngine{
+    public static func shareEngine () -> SqliteEngine{
         return engine;
     }
     
@@ -46,7 +47,7 @@ class SqliteEngine{
     }
     
     //open collectied log Info
-    func configTableInformationWithSqliteItem(item : BaseSqliteItem<AnyClass>, block : sqliteEngineExecuteCompletedBlock) -> Void {
+    func configTableInformationWithSqliteItem(item : BaseSqliteItem, block : sqliteEngineExecuteCompletedBlock) -> Void {
         if (self.database!.open())
         {
             self.sqliteQueue?.inDatabase({ (db : FMDatabase) in
@@ -66,7 +67,7 @@ class SqliteEngine{
     }
     
     //excuted Statement from item <for sqliteItem>
-    func excutedWithSqiteItem(item : BaseSqliteItem<BaseDataModel.Type> , block : sqliteEngineExecuteCompletedBlock) -> Void {
+    func excutedWithSqiteItem(item : BaseSqliteItem , block : sqliteEngineExecuteCompletedBlock) -> Void {
         if (!self.database!.open())
         {
             if (block != nil)
@@ -92,7 +93,7 @@ class SqliteEngine{
     }
     
     //select data from Sqlite <for Controller>
-    func selectDataWithStatement(item : BaseSqliteItem<BaseDataModel.Type>, block : sqliteEngineSelectedCompletedBlock<Any>) -> Void {
+    public func selectDataWithStatement(item : BaseSqliteItem, block : sqliteEngineSelectedCompletedBlock<BaseDataModel>) -> Void {
         if (!self.database!.open())
         {
             if (block != nil)
@@ -104,14 +105,31 @@ class SqliteEngine{
         
         self.database?.open();
         self.sqliteQueue?.inDatabase({ (db : FMDatabase) in
-            var resultArray : Array<Any> = [];
+            var resultArray : Array<BaseDataModel> = [];
             let result : FMResultSet = db.executeQuery(item.operateStatement!, withParameterDictionary: [:])!;
+            var model : BaseDataModel? = nil;
             while(result.next())
             {
                 let resultDic : Dictionary = result.resultDictionary!;
-                let model = item.selectedDataModelClass?.model(with: resultDic);
+                switch item.dataType
+                {
+                    case .httpRequest:
+                        let str : String = resultDic.jsonString();
+                        model = HttpLogInformationDataModel.deserialize(from: str);
+                    case.crash:
+//                        model =
+                        //TODO
+                        break;
+                    case.notification:
+                        //TODO
+                        break;
+                    default:
+                    break;
+                }
+                    
                 resultArray.append(model!);
             }
+                
             if (block != nil)
             {
                 block! (true, resultArray);

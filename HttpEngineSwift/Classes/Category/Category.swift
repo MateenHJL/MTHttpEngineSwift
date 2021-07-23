@@ -54,5 +54,11 @@ public extension Dictionary{
         strM.append("}\n")
         return strM;
     }
+    
+    func jsonString() -> String {
+        let data = try? JSONSerialization.data(withJSONObject: self, options: JSONSerialization.WritingOptions.init(rawValue: 0))
+        let jsonStr = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+        return jsonStr! as String
+    }
 }
 

@@ -8,17 +8,15 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - HttpEngineSwift (1.0.2):
+  - HandyJSON (5.0.2)
+  - HttpEngineSwift (1.0.3):
     - DateToolsSwift
     - FMDB
+    - HandyJSON
     - ISRemoveNull
     - ReachabilitySwift
-    - YYKit
   - ISRemoveNull (0.0.3)
   - ReachabilitySwift (5.0.0)
-  - YYKit (1.0.9):
-    - YYKit/no-arc (= 1.0.9)
-  - YYKit/no-arc (1.0.9)
 
 DEPENDENCIES:
   - FBSnapshotTestCase (~> 2.1.4)
@@ -29,9 +27,9 @@ SPEC REPOS:
     - DateToolsSwift
     - FBSnapshotTestCase
     - FMDB
+    - HandyJSON
     - ISRemoveNull
     - ReachabilitySwift
-    - YYKit
 
 EXTERNAL SOURCES:
   HttpEngineSwift:
@@ -41,10 +39,10 @@ SPEC CHECKSUMS:
   DateToolsSwift: 4207ada6ad615d8dc076323d27037c94916dbfa6
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  HttpEngineSwift: 2179dd61e954742bacb008fec570c3b13f0acbe9
+  HandyJSON: 9e4e236f5d2dbefad5155a77417bbea438201c03
+  HttpEngineSwift: 68b6fd9eb70af4975d3f23cd257abc0fc35c0153
   ISRemoveNull: 7fb2bb73a9f173cd1d12e9cbd7c7d8766d939b4d
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
-  YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
 PODFILE CHECKSUM: e2e4dce311bc2d85d23e158efae7bab8e85c5e27
 

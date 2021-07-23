@@ -8,7 +8,7 @@
 import Foundation
 
 
-class HttpLogCollectionItem {
+public class HttpLogCollectionItem {
     
     static func Kmark (markString : String) -> String{
         return "mark_\(markString)_mark";
@@ -33,19 +33,19 @@ class HttpLogCollectionItem {
     static let kHttpRequestUrl = "httpRequestUrl";
 
     
-    static func createTableItem () -> BaseSqliteItem<AnyClass>{
-        let item : BaseSqliteItem = BaseSqliteItem<AnyClass>.init();
+    static func createTableItem () -> BaseSqliteItem{
+        let item : BaseSqliteItem = BaseSqliteItem.init();
         item.configTableStatement = "CREATE TABLE IF NOT EXISTS '\(kHttpCollectedLogCenterTable)' ('\(kId)' INTEGER PRIMARY KEY AUTOINCREMENT,'\(kDisplayDescription)' TEXT,'\(kLogType)' INTEGER, '\(kCreateTimeStamp)' INTEGER, '\(kCreateTime)' TEXT, '\(kMark)' TEXT, '\(kBusinessDescription)' TEXT, '\(kHttpMethod)' TEXT, '\(kPostParams)' TEXT, '\(kHeader)' TEXT, '\(kResponseData)' TEXT, '\(kStatusCode)' TEXT, '\(kResponseDataType)' TEXT, '\(kHttpDebugMessage)' TEXT, '\(kCreateDay)' TEXT, '\(kHttpRequestUrl)' TEXT)";
         return item;
     }
     
-    static func configInsertStatementWithDataModel (dataModel : HttpLogInformationDataModel) -> BaseSqliteItem<BaseDataModel.Type>{
-        let item : BaseSqliteItem = BaseSqliteItem<BaseDataModel.Type>.init();
+    static func configInsertStatementWithDataModel (dataModel : HttpLogInformationDataModel) -> BaseSqliteItem{
+        let item : BaseSqliteItem = BaseSqliteItem.init();
         item.operateStatement = "INSERT INTO '\(kHttpCollectedLogCenterTable)' ('\(kMark)', '\(kDisplayDescription)', '\(kCreateTimeStamp)', '\(kLogType)', '\(kCreateTime)', '\(kBusinessDescription)', '\(kHttpMethod)', '\(kPostParams)', '\(kHeader)', '\(kResponseData)', '\(kStatusCode)', '\(kResponseDataType)', '\(kHttpDebugMessage)', '\(kCreateDay)', '\(kHttpRequestUrl)') VALUES ('\(dataModel.mark!)', '\(dataModel.displayDescription ?? "")', '\(dataModel.createTimeStamp!)', '\(dataModel.logType!)', '\(dataModel.createTime!)', '\(dataModel.businessDescription!)', '\(dataModel.httpMethod!)', '\(dataModel.postParams!)', '\(dataModel.header!)', '\(dataModel.responseData!)', '\(dataModel.statusCode!)', '\(dataModel.responseDataType!)', '\(dataModel.httpDebugMessage!)', '\(dataModel.createDay!)', '\(dataModel.httpRequestUrl!)')";
         return item;
     }
     
-    static func convertHttpItemWithSqliteItemWithHttpItem (item : BaseHttpItem) -> BaseSqliteItem<BaseDataModel.Type>{
+    static func convertHttpItemWithSqliteItemWithHttpItem (item : BaseHttpItem) -> BaseSqliteItem{
         var responseDataType = "";
         switch item.httpResponseDataType
         {
@@ -74,33 +74,33 @@ class HttpLogCollectionItem {
         return self.configInsertStatementWithDataModel(dataModel: logDataModel);
     }
     
-    static func convertPushDataWithSqliteItemWithPushDataDic (pushDic : Dictionary<String, Any>) -> BaseSqliteItem<BaseDataModel.Type>{
+    static func convertPushDataWithSqliteItemWithPushDataDic (pushDic : Dictionary<String, Any>) -> BaseSqliteItem{
         let logDataModel : HttpLogInformationDataModel = HttpLogInformationDataModel.init();
         logDataModel.displayDescription = pushDic.descriptionWithLocale();
         logDataModel.logType = HttpLogInfomationDataModeType.notification;
         return configInsertStatementWithDataModel(dataModel: logDataModel);
     }
     
-    static func selectAllHttpLogWithMark (mark : String) -> BaseSqliteItem<HttpLogInformationDataModel>{
-        let item : BaseSqliteItem = BaseSqliteItem<HttpLogInformationDataModel>.init();
+    public static func selectAllHttpLogWithMark (mark : String) -> BaseSqliteItem{
+        let item : BaseSqliteItem = BaseSqliteItem.init();
         item.operateStatement = "select * from \(kHttpCollectedLogCenterTable) where \(kMark) like '\(mark)' order by \(kCreateTimeStamp) desc"
         return item;
     }
     
-    static func selectOneDayLogInformationWithDay (day : String, key : String, mark : String) -> BaseSqliteItem<HttpLogInformationDataModel>{
-        let item : BaseSqliteItem = BaseSqliteItem<HttpLogInformationDataModel>.init();
+    static func selectOneDayLogInformationWithDay (day : String, key : String, mark : String) -> BaseSqliteItem{
+        let item : BaseSqliteItem = BaseSqliteItem.init();
         item.operateStatement = "SELECT * FROM \(kHttpCollectedLogCenterTable) WHERE \(kMark) like '\(mark)' AND \(kCreateDay) like '\(day)' AND \(kDisplayDescription) like '%\(key)%' order by \(kCreateTimeStamp) desc"
         return item;
     }
     
-    static func selectDebugLogWithLogid (logId : String) -> BaseSqliteItem<HttpLogInformationDataModel>{
-        let item : BaseSqliteItem = BaseSqliteItem<HttpLogInformationDataModel>.init();
+    static func selectDebugLogWithLogid (logId : String) -> BaseSqliteItem{
+        let item : BaseSqliteItem = BaseSqliteItem.init();
         item.operateStatement = "select * from \(kHttpCollectedLogCenterTable) where \(kId) like '\(logId)'"
         return item;
     }
     
-    static func deleteAllLog () -> BaseSqliteItem<BaseDataModel>{
-        let item : BaseSqliteItem = BaseSqliteItem<BaseDataModel>.init();
+    static func deleteAllLog () -> BaseSqliteItem{
+        let item : BaseSqliteItem = BaseSqliteItem.init();
         item.operateStatement = "delete from \(kHttpCollectedLogCenterTable)";
         return item;
     }

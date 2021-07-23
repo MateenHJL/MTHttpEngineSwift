@@ -122,7 +122,7 @@ open class HttpEngine : NSObject {
                 
                 if (CacheLogicHandleManager.shouldSaveHttpNetworkLogWithItem(item: responsedItem))
                 {
-                    let sqliteItem : BaseSqliteItem<BaseDataModel.Type> = HttpLogCollectionItem.convertHttpItemWithSqliteItemWithHttpItem(item: responsedItem);
+                    let sqliteItem : BaseSqliteItem = HttpLogCollectionItem.convertHttpItemWithSqliteItemWithHttpItem(item: responsedItem);
                     SqliteEngine.shareEngine().excutedWithSqiteItem(item: sqliteItem) { (isSuccessed : Bool, operatedError : String) in
                         if (isSuccessed)
                         {

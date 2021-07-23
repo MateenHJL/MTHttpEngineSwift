@@ -14,7 +14,7 @@ public enum HttpLogInfomationDataModeType {
     case notification       //the type is Notification
 }
 
-class HttpLogInformationDataModel {
+public class HttpLogInformationDataModel : BaseDataModel {
     var logId : String?;
     var httpRequestUrl : String?;
     var businessDescription : String?;
@@ -30,9 +30,9 @@ class HttpLogInformationDataModel {
     var createDay : String?;
     var createTimeStamp : TimeInterval?;
     var createTime : String?;
-    var logType : HttpLogInfomationDataModeType?
+    var logType : HttpLogInfomationDataModeType?;
     
-    init() {
+    required init() {
         let date : Date = Date.init();
         self.createTimeStamp = TimeInterval(date.timeIntervalSince1970);
         self.createDay = "\(date.year)年\(date.month)月\(date.day)日";

@@ -16,7 +16,7 @@ open class BaseHttpItem : NSObject, HttpSessionDataTaskDataSource {
     }
     
     deinit {
-        print("\(self.className()) has been dealloc");
+        print("\(self) has been dealloc");
     }
     
     public var httpRequestPostParams: Dictionary<String, String>{

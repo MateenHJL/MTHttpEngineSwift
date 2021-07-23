@@ -7,8 +7,8 @@
 
 import Foundation
 
-open class BaseSqliteItem<T> : NSObject {
+open class BaseSqliteItem : NSObject {
     public var operateStatement : String?;
     public var configTableStatement : String?;
-    public var selectedDataModelClass : T?;
+    public var dataType : HttpLogInfomationDataModeType?;
 }

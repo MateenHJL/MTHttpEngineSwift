@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'HttpEngineSwift'
-  s.version          = '1.0.3'
+  s.version          = '1.0.4'
   s.summary          = 'A short description of HttpEngineSwift.'
 
 # This description is used to generate tags and improve search results.
@@ -37,11 +37,11 @@ TODO: Add long description of the pod here.
   # }
   
   s.public_header_files = 'Pod/Classes/*.swift'
-  s.dependency 'YYKit'
   s.dependency 'FMDB'
   s.dependency 'ISRemoveNull'
   s.dependency 'DateToolsSwift'
   s.dependency 'ReachabilitySwift'
+  s.dependency 'HandyJSON'
   
   s.pod_target_xcconfig = {
         'VALID_ARCHS' => 'x86_64 armv7 arm64'

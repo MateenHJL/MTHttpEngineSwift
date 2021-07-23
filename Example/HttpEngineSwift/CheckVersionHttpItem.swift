@@ -8,6 +8,7 @@
 
 import Foundation
 import HttpEngineSwift
+import HandyJSON
 
 open class CheckVersionHttpItem: BaseHttpItem {
     
@@ -27,7 +28,7 @@ open class CheckVersionHttpItem: BaseHttpItem {
     }
     
     public override func httpRequestCompletedWithItem(item : BaseHttpItem) -> Void {
-        let dataModel : CheckVersionEntity = CheckVersionEntity.model(withJSON: item.httpRequestResponseData!) ?? CheckVersionEntity.init();
+        let dataModel : CheckVersionEntity = CheckVersionEntity.deserialize(from: item.httpRequestResponseData as? [String : Any])!;
         if ((_completedBlock) != nil)
         {
             _completedBlock!!(dataModel);
@@ -35,7 +36,7 @@ open class CheckVersionHttpItem: BaseHttpItem {
     }
     
     public override func httpRequestCompletedExceptionWithItem(item: BaseHttpItem) -> Void {
-        let dataModel : CommonLogicDataModel = CommonLogicDataModel.model(withJSON: item.httpRequestResponseData!)!;
+        let dataModel : CommonLogicDataModel = CommonLogicDataModel.deserialize(from: item.httpRequestResponseData as? [String : Any])!;
         if ((_faliedBlock) != nil)
         {
             _faliedBlock!!(dataModel);

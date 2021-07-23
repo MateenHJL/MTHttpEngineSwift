@@ -8,14 +8,15 @@
 
 import Foundation
 import HttpEngineSwift
+import HandyJSON
 
-class CheckVersionEntity : BaseDataModel{
-    @objc var info : String?;
-    @objc var data : CheckVersionDataModel?;
+open class CheckVersionEntity : BaseDataModel {
+    var info : String?;
+    var data : CheckVersionDataModel?;
 }
 
-class CheckVersionDataModel: BaseDataModel {
-    @objc var content : String?;
-    @objc var version : String?;
-    @objc var link : String?;
+open class CheckVersionDataModel: BaseDataModel {
+    var content : String?;
+    var version : String?;
+    var link : String?;
 }
